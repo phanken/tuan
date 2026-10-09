@@ -1,6 +1,6 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)], money=n=>Math.round(n||0).toLocaleString('vi-VN')+'đ';
 const defaults={StandardDays:26,AttendanceBonus:400000,InsuranceRate:.105,UnionRate:.005,NormalOvertimeRate:1.5,SundayDayRate:2,SundayNightRate:2.8,NightExtraRate:.3,NightOvertimeAfter2Rate:2.15,NightExtraHours:6,SundayDefaultHours:11,LeaveAccrualDay:16,LeaveAccrualAmount:1};
-const newEmp=()=>({Id:crypto.randomUUID(),Name:'Nhân viên 1',Department:'Cá nhân',Code:'NV01',SalaryBase:8500000,OvertimeBase:7000000,AnnualLeaveBalance:0,LastLeaveAccrualDate:new Date().toISOString()});
+const newEmp=()=>({Id:crypto.randomUUID(),Name:'Nguyễn Văn Tuấn',Department:'Cá nhân',Code:'NV01',SalaryBase:9200000,OvertimeBase:7200000,AnnualLeaveBalance:0,LastLeaveAccrualDate:new Date().toISOString()});
 let data=JSON.parse(localStorage.getItem('chamcong_data')||'null')||{Employees:[newEmp()],Attendance:[],LeaveAccruals:[],Settings:{...defaults}}; data.Settings={...defaults,...data.Settings};
 let current=data.Employees[0], selected=new Date(), calDate=new Date(), month=new Date().getMonth()+1, year=new Date().getFullYear();
 const cfg=()=>JSON.parse(localStorage.getItem('github_cfg')||'{}');
