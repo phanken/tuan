@@ -12,4 +12,26 @@
 <section id="payroll" class="view"><div class="page-head"><div><h2>Bảng lương</h2><p id="payrollTitle"></p></div><button id="exportCsv">↓ Xuất CSV</button></div><div class="card table-wrap"><table><thead><tr><th>Mã</th><th>Nhân viên</th><th>Công</th><th>Lương công</th><th>OT</th><th>Ca đêm</th><th>Chủ nhật</th><th>Chuyên cần</th><th>BH</th><th>CĐ</th><th>THỰC NHẬN</th></tr></thead><tbody id="payrollTable"></tbody></table></div></section>
 <section id="settings" class="view"><div class="page-head"><div><h2>Cài đặt</h2><p>Quy tắc tính lương và sao lưu dữ liệu trên thiết bị.</p></div></div><div class="settings-grid"><form class="card" id="rulesForm"><h3>Quy tắc lương</h3><div id="ruleFields"></div><button type="submit">Lưu quy tắc</button></form><div class="card"><h3>Sao lưu dữ liệu</h3><p>Xuất/khôi phục toàn bộ dữ liệu JSON.</p><button id="exportJson" class="outline">Xuất JSON</button><label class="filebtn">Khôi phục JSON<input type="file" id="importJson" accept=".json"></label></div></div></section>
 </main><dialog id="modal"><form method="dialog" id="modalForm"><h3 id="modalTitle"></h3><div id="modalBody"></div><div class="modal-actions"><button value="cancel" class="outline">Hủy</button><button value="default" id="modalOk">Lưu</button></div></form></dialog>
-<script src="app.js"></script><script>let deferredPrompt;const ib=document.getElementById("installBtn");window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;ib.hidden=false});ib.addEventListener("click",async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;ib.hidden=true});window.addEventListener("appinstalled",()=>{ib.hidden=true;deferredPrompt=null});if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.error));</script></body></html>
+<script>window.CHAMCONG_BUILD_VERSION="2026.10.09.2";</script><script src="app.js"></script><script>let deferredPrompt;const ib=document.getElementById("installBtn");window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;ib.hidden=false});ib.addEventListener("click",async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;ib.hidden=true});window.addEventListener("appinstalled",()=>{ib.hidden=true;deferredPrompt=null});if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(r=>r.update()).catch(console.error));}
+let checkingUpdate=false;
+async function checkForAppUpdate(){
+ if(checkingUpdate||!navigator.onLine)return;
+ checkingUpdate=true;
+ try{
+  if("serviceWorker" in navigator){const reg=await navigator.serviceWorker.getRegistration();if(reg)await reg.update();}
+  const response=await fetch("./version.json?t="+Date.now(),{cache:"no-store"});
+  if(!response.ok)return;
+  const latest=(await response.json()).version;
+  if(latest&&latest!==window.CHAMCONG_BUILD_VERSION){
+   const key="chamcong-update-attempt-"+latest;
+   if(sessionStorage.getItem(key)!=="1"){
+    sessionStorage.setItem(key,"1");
+    window.location.reload();
+   }
+  }
+ }catch(e){console.debug("Update check unavailable",e)}finally{checkingUpdate=false}
+}
+window.addEventListener("load",checkForAppUpdate);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkForAppUpdate()});
+window.addEventListener("online",checkForAppUpdate);
+setInterval(()=>{if(!document.hidden)checkForAppUpdate()},60000);</script></body></html>
