@@ -38,3 +38,5 @@ html,body{max-width:100%;overflow-x:hidden}
   header h1{font-size:17px}.header-actions button{padding:7px 8px}
   .profile h2{font-size:17px}
 }
+
+.emp-actions{display:flex;gap:6px;align-items:center}.emp-actions button{padding:8px 11px;white-space:nowrap}.emp-actions .danger{border-color:#f4c4c4;color:#c62828;background:#fff7f7}
